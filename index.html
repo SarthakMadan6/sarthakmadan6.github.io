@@ -9,245 +9,164 @@
   <meta name="theme-color" content="#FF7529" />
   <style>
     :root{
-      --bg1:#FF7529;    /* orange */
-      --bg2:#291D4A;    /* deep violet */
+      --bg1:#FF7529;
       --text:#f8fafc;
       --muted:#cbd5e1;
       --card:rgba(255,255,255,.06);
-      --card-border:rgba(255,255,255,.14);
+      --card-border:rgba(255,255,255,.12);
       --shadow:0 10px 30px rgba(0,0,0,.35);
-      --max:1100px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;color:var(--text);
-      background:linear-gradient(120deg,var(--bg1),var(--bg2));
-      min-height:100vh; overflow-x:hidden; position:relative;
-    }
+    body{font-family:Arial,Helvetica,sans-serif;color:var(--text);
+      background:var(--bg1);overflow-x:hidden;position:relative;min-height:100vh;}
 
-    /* ---------- FX canvas (subtle lightning) ---------- */
-    #fx{position:fixed;inset:0;pointer-events:none;z-index:0}
+    header{position:sticky;top:0;background:transparent;z-index:50;padding:16px}
+    nav{display:flex;align-items:center;justify-content:center;gap:40px}
+    nav a{font-weight:700;text-decoration:none;color:var(--text);font-size:1rem;transition:text-shadow .3s ease}
+    nav a:hover{text-shadow:0 0 6px rgba(255,255,255,0.6)}
 
-    /* ---------- Header / Nav (no box; blends with bg) ---------- */
-    header{position:sticky;top:0;z-index:50; background:transparent; border-bottom:none}
-    nav{display:flex;align-items:center;justify-content:center;gap:48px;padding:16px}
-    nav a{
-      text-decoration:none; color:var(--text); font-weight:800; letter-spacing:.2px;
-      transition: text-shadow .18s ease, color .18s ease;
-      white-space:nowrap;
-    }
-    nav a:hover{ text-shadow:0 0 6px rgba(255,255,255,.35); color:#fff }
-
-    /* ---------- Layout / Cards ---------- */
-    .section{padding:68px 20px;max-width:var(--max);margin:0 auto}
-    .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-    h1{font-size:clamp(36px,7vw,72px);margin-bottom:12px;text-align:center}
-    h2{font-size:clamp(26px,4.5vw,40px);margin-bottom:20px}
-    p{line-height:1.65;color:var(--muted)}
+    .section{padding:64px 0;max-width:1100px;margin:auto}
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    h1{font-size:clamp(34px,6vw,64px);margin-bottom:12px;text-align:center;position:relative;overflow:hidden;}
+    h2{font-size:clamp(24px,4vw,36px);margin-bottom:16px;text-align:center}
+    p{line-height:1.6;color:var(--muted)}
     .center{text-align:center}
-    .icons{display:flex;gap:12px;justify-content:center;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);box-shadow:var(--shadow);text-decoration:none;color:#fff;font-weight:600}
 
-    /* ---------- Accordions with spacing ---------- */
-    details{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-    details + details{margin-top:16px}           /* spacing between boxes */
-    summary{cursor:pointer;list-style:none;font-weight:800}
-    summary::marker{display:none}
-    .muted{color:var(--muted)}
-    ul{margin:8px 0 0 18px}
-    li{margin:6px 0}
-
-    /* ---------- Contact card (aesthetic) ---------- */
-    .contact-card{
-      margin:0 auto;max-width:860px;padding:40px 28px;
-      border-radius:22px;border:1px solid var(--card-border);
-      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
-      box-shadow:0 20px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.15);
-      backdrop-filter:blur(12px) saturate(140%); text-align:center;
+    /* Social links — plain like nav, with subtle glow on hover */
+    .icons{display:flex;gap:24px;justify-content:center;margin-top:20px}
+    .iconlink{
+      display:flex;align-items:center;gap:10px;
+      text-decoration:none;color:#fff;font-weight:800;letter-spacing:.2px;
+      transition:text-shadow .25s ease, opacity .25s ease;
     }
-    .contact-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:14px}
-    .contact-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:1px solid var(--card-border);background:rgba(255,255,255,.08);text-decoration:none;color:#fff;font-weight:700;box-shadow:var(--shadow)}
-    .contact-btn svg{width:20px;height:20px}
+    .iconlink:hover{ text-shadow:0 0 6px rgba(255,255,255,.35) }
+    .iconlink svg{width:22px;height:22px;fill:#fff}
 
-    /* ---------- Smooth scroll ---------- */
-    html{scroll-behavior:smooth}
+    /* Lightning effect */
+    .lightning{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:transparent;}
+    .flash{animation:flashAnim 6s infinite;}
+    @keyframes flashAnim{
+      0%,96%,100%{background:transparent}
+      97%{background:rgba(255,255,255,.2)}
+      98%{background:rgba(255,255,255,.4)}
+      99%{background:rgba(255,255,255,.2)}
+    }
+
+    /* Contact card styling */
+    .contact-card{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      border:1px solid var(--card-border);border-radius:22px;padding:40px;box-shadow:0 20px 50px rgba(0,0,0,.4);
+      backdrop-filter:blur(18px) saturate(160%);text-align:center}
+    .contact-card p{font-size:1.2rem;color:var(--text);margin-bottom:20px}
+    .contact-actions{display:flex;justify-content:center;gap:16px;margin-top:16px}
+    .iconbtn{display:inline-flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:14px;border:1px solid var(--card-border);
+      background:var(--card);color:#fff;box-shadow:var(--shadow);transition:transform .2s}
+    .iconbtn:hover{transform:translateY(-3px)}
+    .iconbtn svg{width:24px;height:24px}
+
+    /* Experience & Projects */
+    .exp-card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+    .exp-card h3{margin:0;color:#fff}
+
+    /* F1 Car Animation */
+    .f1-container{position:relative;display:inline-block;}
+    .f1-car{position:absolute;left:-150px;bottom:0;width:150px;height:auto;animation:drive 6s forwards;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4));}
+    @keyframes drive{
+      0%{left:-200px;}
+      60%{left:50%;transform:translateX(-50%) rotate(-10deg);} 
+      75%{left:50%;transform:translateX(-50%) rotate(10deg);} 
+      90%{left:50%;transform:translateX(-50%) rotate(-8deg);} 
+      100%{left:120%;}
+    }
+    .smoke{position:absolute;bottom:10px;left:50%;width:220px;height:80px;background:radial-gradient(ellipse at center,rgba(255,255,255,.7) 0%,transparent 70%);
+      transform:translateX(-50%);opacity:0;animation:smokeAnim 6s forwards;z-index:-1;}
+    @keyframes smokeAnim{
+      0%,40%{opacity:0}
+      55%{opacity:1}
+      75%{opacity:0.8;transform:translateX(-50%) scale(1.3)}
+      100%{opacity:0;transform:translateX(-50%) scale(1.6)}
+    }
   </style>
 </head>
 <body>
-  <!-- Subtle lightning layer -->
-  <canvas id="fx"></canvas>
-
-  <!-- Header with plain text links (no box) -->
+  <div class="lightning flash"></div>
   <header>
     <nav>
-      <a class="typer" href="#home" data-text="Home">Home</a>
-      <a class="typer" href="#about" data-text="About">About</a>
-      <a class="typer" href="#experience" data-text="Experience">Experience</a>
-      <a class="typer" href="#projects" data-text="Projects">Projects</a>
-      <a class="typer" href="#contact" data-text="Contact">Contact</a>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
-
   <main>
-    <!-- HOME -->
     <section id="home" class="section center">
-      <div class="card" style="padding:40px">
-        <h1 class="typer" data-text="Sarthak Madan">Sarthak Madan</h1>
-        <p class="typer" data-text="California State University, East Bay"><strong>California State University, East Bay</strong></p>
-        <div class="icons">
-          <a class="btn typer" data-text="LinkedIn" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a class="btn typer" data-text="GitHub" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn typer" data-text="Email" href="mailto:sarthakmadan6@gmail.com">Email</a>
+      <div class="card" style="padding:40px;position:relative;overflow:hidden;">
+        <div class="f1-container">
+          <h1 id="name-heading">Sarthak Madan</h1>
+          <!-- Ferrari Red F1 Car SVG -->
+          <svg class="f1-car" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Ferrari F1 car">
+            <rect x="20" y="20" width="100" height="20" fill="#e10600"/>
+            <rect x="15" y="15" width="20" height="10" fill="#b20000"/>
+            <rect x="110" y="25" width="30" height="10" fill="#b20000"/>
+            <circle cx="35" cy="45" r="10" fill="#222"/>
+            <circle cx="115" cy="45" r="10" fill="#222"/>
+            <circle cx="35" cy="45" r="4" fill="#999"/>
+            <circle cx="115" cy="45" r="4" fill="#999"/>
+          </svg>
+          <div class="smoke" aria-hidden="true"></div>
+        </div>
+
+        <!-- Plain social links with white icons (no boxes) -->
+        <div class="icons" aria-label="Social links">
+          <!-- LinkedIn -->
+          <a class="iconlink" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.5 8.5h4V23h-4V8.5ZM8.5 8.5h3.82v1.98h.05c.53-1 1.82-2.05 3.75-2.05 4.01 0 4.75 2.64 4.75 6.08V23h-4v-5.65c0-1.35-.02-3.08-1.88-3.08-1.88 0-2.17 1.47-2.17 2.98V23h-4V8.5Z" fill="#ffffff"/></svg>
+            LinkedIn
+          </a>
+          <!-- GitHub -->
+          <a class="iconlink" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.1-.76.08-.74.08-.74 1.22.09 1.86 1.26 1.86 1.26 1.08 1.86 2.84 1.32 3.53 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.48-1.34-5.48-5.97 0-1.32.47-2.4 1.24-3.24-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.92 1.24 3.24 0 4.64-2.81 5.66-5.49 5.96.43.37.81 1.1.81 2.23v3.3c0 .32.22.69.82.58A12.01 12.01 0 0 0 12 .5Z" fill="#ffffff"/></svg>
+            GitHub
+          </a>
+          <!-- Email -->
+          <a class="iconlink" href="mailto:sarthakmadan6@gmail.com" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 13.065 0 6h24l-12 7.065ZM12 15.5 0 8.5V20h24V8.5L12 15.5Z" fill="#ffffff"/></svg>
+            Email
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section">
-      <div class="card">
-        <h2 class="typer" data-text="About">About</h2>
-        <p class="typer" data-text="I turn messy problems into clean systems.">I turn messy problems into clean systems.</p>
-        <p>Hi, I’m Sarthak. I enjoy shipping useful tools, simplifying workflows, and connecting dots across software, data, and business. Off work: tennis, pickleball, F1, and tinkering with trading systems.</p>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE (All items shown; each is a dropdown with spacing) -->
     <section id="experience" class="section">
-      <h2 class="typer" data-text="Experience">Experience</h2>
-
-      <details open>
-        <summary class="typer" data-text="IT Systems Analyst — Polyplex USA LLC · 2024–2025">IT Systems Analyst — Polyplex USA LLC · 2024–2025</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Built and deployed a full-stack visitor management system across the facility.">Built and deployed a full-stack visitor management system across the facility.</li>
-          <li class="typer" data-text="Refactored ERP modules into modular components to improve resilience.">Refactored ERP modules into modular components to improve resilience.</li>
-          <li class="typer" data-text="Automated infrastructure workflows and backups.">Automated infrastructure workflows and backups.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Software Engineer Intern — Persistent Systems · 2024">Software Engineer Intern — Persistent Systems · 2024</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Streamlined imaging systems via automation; reduced manual interventions.">Streamlined imaging systems via automation; reduced manual interventions.</li>
-          <li class="typer" data-text="Re-architected dependencies into microservices for efficient deployments.">Re-architected dependencies into microservices for efficient deployments.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Java Developer — Helix Tech IT · 2024">Java Developer — Helix Tech IT · 2024</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Engineered a ticketing system that automated workflows and accelerated resolution.">Engineered a ticketing system that automated workflows and accelerated resolution.</li>
-          <li class="typer" data-text="Built distributed microservices and refined schemas to improve latency.">Built distributed microservices and refined schemas to improve latency.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Software Engineer Intern — Nile Automotive · 2022">Software Engineer Intern — Nile Automotive · 2022</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Implemented ERP features for production tracking and supply chain visibility.">Implemented ERP features for production tracking and supply chain visibility.</li>
-          <li class="typer" data-text="Automated resource allocation; minimized machine downtime.">Automated resource allocation; minimized machine downtime.</li>
-        </ul>
-      </details>
+      <h2>Experience</h2>
+      <div class="exp-card"><h3>IT Systems Analyst — Polyplex USA LLC · 2024–2025</h3></div>
+      <div class="exp-card"><h3>Software Engineer Intern — Persistent Systems · 2024</h3></div>
+      <div class="exp-card"><h3>Java Software Developer — Helix Tech IT · 2021–2022</h3></div>
+      <div class="exp-card"><h3>Software Engineering Intern — Nile Automotive · 2020</h3></div>
+      <div class="exp-card"><h3>Software Engineering Intern — Escorts Kubota Ltd · 2019</h3></div>
     </section>
 
-    <!-- PROJECTS -->
     <section id="projects" class="section">
-      <h2 class="typer" data-text="Projects">Projects</h2>
-
-      <details open>
-        <summary class="typer" data-text="Visitor Management System — C# · ASP.NET · SQL Server">Visitor Management System — C# · ASP.NET · SQL Server</summary>
-        <p class="muted typer" data-text="Facility-wide platform for check-ins, reporting, audits; role-based access and exportable reports.">
-          Facility-wide platform for check-ins, reporting, audits; role-based access and exportable reports.
-        </p>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Algo Trading Bot — Python">Algo Trading Bot — Python</summary>
-        <p class="muted typer" data-text="Strategy backtesting + live execution with risk controls and analytics dashboards.">
-          Strategy backtesting + live execution with risk controls and analytics dashboards.
-        </p>
-      </details>
+      <h2>Projects</h2>
+      <div class="exp-card"><h3>Visitor Management System — C# · ASP.NET · SQL Server</h3></div>
+      <div class="exp-card"><h3>Algo Trading Bot — Python</h3></div>
+      <div class="exp-card"><h3>AI Self-Driving Car Model — Python · TensorFlow</h3></div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section center">
+    <section id="contact" class="section">
       <div class="contact-card">
-        <h2 class="typer" data-text="Contact">Contact</h2>
-        <p class="typer" data-text="Let’s build something useful. Reach me at sarthakmadan6@gmail.com or connect on LinkedIn.">
-          Let’s build something useful. Reach me at <a href="mailto:sarthakmadan6@gmail.com">sarthakmadan6@gmail.com</a> or connect on
-          <a href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>.
-        </p>
+        <h2>Contact</h2>
+        <p>Let’s build something useful. Reach me at <a href="mailto:sarthakmadan6@gmail.com" style="color:#fff;text-decoration:underline">sarthakmadan6@gmail.com</a> or connect on <a href="https://www.linkedin.com/in/madansarthak" target="_blank" style="color:#fff;text-decoration:underline">LinkedIn</a>.</p>
         <div class="contact-actions">
-          <a class="contact-btn typer" data-text="Email" href="mailto:sarthakmadan6@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="1.5" stroke="currentColor"/><path d="M3 6l9 7 9-7" stroke="currentColor"/></svg>
-            Email
-          </a>
-          <a class="contact-btn typer" data-text="View Résumé" href="/resume.pdf" target="_blank" rel="noopener" aria-label="View Resume">
+          <a class="iconbtn" href="/resume.pdf" target="_blank" aria-label="View Resume">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.5h8L18.5 7v14a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 21V4A1.5 1.5 0 0 1 6 2.5Z" stroke="currentColor"/><path d="M14 2.5V7h4.5" stroke="currentColor"/></svg>
-            View Résumé
           </a>
-          <a class="contact-btn typer" data-text="Download" href="/resume.pdf" download aria-label="Download Resume">
+          <a class="iconbtn" href="/resume.pdf" download aria-label="Download Resume">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12" stroke="currentColor"/><path d="M8 11l4 4 4-4" stroke="currentColor"/><path d="M4 20h16" stroke="currentColor"/></svg>
-            Download
           </a>
         </div>
       </div>
     </section>
   </main>
-
-  <script>
-    /* ===== 0/1 Typewriter — runs on elements with .typer when visible ===== */
-    function binaryType(el){
-      const target=(el.dataset.text||el.textContent).replace(/\s+/g,' ').trim();
-      const steps=18; const chars=target.split(''); let frame=0;
-      (function tick(){
-        let done=true, out='';
-        for(let i=0;i<chars.length;i++){
-          const revealAt=i*2;
-          if(frame<revealAt+steps){ done=false; out += (frame<revealAt?' ':(Math.random()>.5?'0':'1')); }
-          else out += chars[i];
-        }
-        el.textContent=out; frame++;
-        if(!done) requestAnimationFrame(tick); else el.textContent=target;
-      })();
-    }
-    const io=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting && !e.target.__typed){ e.target.__typed=true; binaryType(e.target); } });
-    },{threshold:.2});
-    document.querySelectorAll('.typer').forEach(n=>io.observe(n));
-
-    /* ===== Subtle lightning effect ===== */
-    (function(){
-      const c=document.getElementById('fx'); if(!c) return; const d=c.getContext('2d');
-      let W,H; function resize(){W=c.width=innerWidth; H=c.height=innerHeight} resize(); addEventListener('resize',resize);
-      const bolts=[]; let lastSpawn=0;
-      function spawn(){
-        const x = Math.random()*W, y0=-20, y1=H*(0.55+Math.random()*0.35);
-        const segs = 12+Math.floor(Math.random()*10), pts=[[x,y0]]; let cx=x, cy=y0;
-        for(let i=0;i<segs;i++){ cx+=(Math.random()-.5)*60; cy+=(y1-y0)/segs + (Math.random()-.5)*10; pts.push([cx,cy]); }
-        bolts.push({pts,life:1,fade:.04+Math.random()*.03});
-      }
-      function draw(){
-        d.clearRect(0,0,W,H);
-        if(bolts.length){ d.globalCompositeOperation='screen'; }
-        for(let i=bolts.length-1;i>=0;i--){
-          const b=bolts[i], a=b.life;
-          d.strokeStyle=`rgba(255,255,255,${.55*a})`;
-          d.lineWidth=2*a; d.shadowBlur=18*a; d.shadowColor='rgba(255,255,255,.95)';
-          d.beginPath(); d.moveTo(b.pts[0][0],b.pts[0][1]); for(let j=1;j<b.pts.length;j++){ d.lineTo(b.pts[j][0],b.pts[j][1]); } d.stroke();
-          b.life-=b.fade; if(b.life<=0) bolts.splice(i,1);
-        }
-        requestAnimationFrame(draw);
-      }
-      draw();
-      function loop(ts){ if(ts-lastSpawn>1800+Math.random()*1600){ lastSpawn=ts; spawn(); } requestAnimationFrame(loop); }
-      requestAnimationFrame(loop);
-    })();
-
-    /* Optional: www -> apex redirect */
-    if(location.hostname.indexOf('www.')===0){
-      const apex = location.hostname.slice(4);
-      location.replace(`https://${apex}${location.pathname}${location.search}${location.hash}`);
-    }
-  </script>
 </body>
 </html>
