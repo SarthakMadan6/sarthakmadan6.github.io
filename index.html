@@ -4,127 +4,143 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sarthak Madan — Portfolio</title>
-  <meta name="description" content="Interactive one-page portfolio of Sarthak Madan — software & data-driven builder." />
-  <link rel="canonical" href="https://sarthakmadan.space/" />
-  <meta name="theme-color" content="#FF7529" />
-  <meta property="og:title" content="Sarthak Madan — Portfolio" />
-  <meta property="og:description" content="Interactive one-page portfolio with projects, experience, and contact." />
-  <meta property="og:url" content="https://sarthakmadan.space/" />
-  <meta name="twitter:card" content="summary" />
-
+  <meta name="description" content="Interactive one‑page portfolio of Sarthak Madan" />
   <style>
+    /* ====== Theme & Reset ====== */
     :root{
-      --bg1:#FF7529;       /* given orange */
-      --bg2:#291D4A;       /* given deep violet */
+      --bg1:#FF7529;           /* orange */
+      --bg2:#291D4A;           /* deep violet */
       --text:#f8fafc;
-      --muted:#dbe5f1;
-      --card:rgba(255,255,255,.08);
-      --card-border:rgba(255,255,255,.18);
-      --shadow:0 14px 40px rgba(0,0,0,.35);
+      --muted:#cbd5e1;
+      --card: rgba(255,255,255,.06);
+      --card-border: rgba(255,255,255,.12);
+      --accent:#FFD29E;        /* warm accent derived from bg1 */
+      --accent2:#B7A3FF;       /* cool accent derived from bg2 */
+      --shadow:0 10px 30px rgba(0,0,0,.35);
       --max:1100px;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
+    *{box-sizing:border-box}
     html,body{height:100%}
-    body{font-family:Arial, Helvetica, sans-serif;color:var(--text);overflow-x:hidden}
+    body{margin:0;font-family:ui-sans-serif, system-ui, -apple-system,"Segoe UI", Roboto, Helvetica, Arial; color:var(--text); overflow-x:hidden}
+    a{color:inherit}
 
-    /* ===== Animated flowing background (FF7529 + 291D4A) ===== */
-    .bg{position:fixed; inset:0; z-index:-2;
-      background:
-        radial-gradient(35% 45% at 20% 20%, color-mix(in oklab, var(--bg1) 90%, #fff 0%) 0%, transparent 70%),
-        radial-gradient(45% 60% at 80% 30%, color-mix(in oklab, var(--bg2) 90%, #000 0%) 0%, transparent 75%),
-        linear-gradient(120deg, var(--bg1), var(--bg2));
-      background-size: 220% 220%, 220% 220%, 200% 200%;
-      animation: flowA 18s ease-in-out infinite alternate, flowB 22s ease-in-out infinite alternate, hue 60s linear infinite;
-      filter: saturate(1.06) contrast(1.02);
+    /* ====== Animated flowing gradient background ====== */
+    .bg{
+      position:fixed; inset:0; z-index:-2;
+      background: radial-gradient(35% 45% at 20% 20%, color-mix(in oklab, var(--bg1) 80%, #fff 0%) 0%, transparent 70%),
+                  radial-gradient(40% 55% at 80% 30%, color-mix(in oklab, var(--bg2) 85%, #000 0%) 0%, transparent 75%),
+                  linear-gradient(120deg, var(--bg1), var(--bg2));
+      background-size: 200% 200%, 200% 200%, 200% 200%;
+      animation: flowA 22s ease-in-out infinite alternate, flowB 28s ease-in-out infinite alternate, flowC 36s linear infinite;
+      filter: saturate(1.05) contrast(1.02);
     }
-    @keyframes flowA{from{background-position:0% 30%,50% 50%,0% 0%}to{background-position:100% 70%,50% 50%,100% 100%}}
-    @keyframes flowB{from{background-position:50% 50%,0% 70%,0% 0%}to{background-position:50% 50%,100% 30%,100% 100%}}
-    @keyframes hue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(1deg)}}
+    @keyframes flowA{ from{background-position: 0% 30%, 50% 50%, 0% 0%} to{background-position: 100% 70%, 50% 50%, 100% 100%} }
+    @keyframes flowB{ from{background-position: 50% 50%, 0% 70%, 0% 0%}  to{background-position: 50% 50%, 100% 30%, 100% 100%} }
+    @keyframes flowC{ from{filter:hue-rotate(0deg)} to{filter:hue-rotate(3deg)} }
 
-    /* ===== Fast, dense rain (canvas) ===== */
-    canvas#rain{position:fixed; inset:0; z-index:-1; pointer-events:none;}
-
-    /* ===== Header / Nav (glass pills, no movement) ===== */
-    header{position:sticky; top:0; z-index:50; backdrop-filter: blur(16px) saturate(160%);
-      background: rgba(18,18,22,.28); border-bottom:1px solid var(--card-border)}
-    nav{display:flex; align-items:center; justify-content:center; gap:14px; padding:14px}
-    nav a{
-      display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:800; color:var(--muted);
-      padding:10px 16px; border-radius:14px; border:1px solid var(--card-border);
-      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-      box-shadow: 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.2);
-      backdrop-filter: blur(10px); transition: color .15s ease;
-      white-space:nowrap;
+    /* Subtle vignette for depth */
+    .vignette{position:fixed; inset:-10vmax; pointer-events:none; z-index:-1;
+      background: radial-gradient(70% 70% at 50% 50%, transparent 60%, rgba(0,0,0,.25) 100%);
     }
-    nav a:hover{color:#fff}
 
-    .section{padding:72px 0; max-width:var(--max); margin:0 auto}
-    .card{background:var(--card); border:1px solid var(--card-border); border-radius:22px; padding:28px; box-shadow: var(--shadow); backdrop-filter: blur(18px) saturate(140%)}
-    h1{font-size: clamp(36px, 7vw, 72px); margin-bottom:12px; text-align:center}
-    h2{font-size: clamp(24px, 4vw, 36px); margin-bottom:16px}
+    /* ====== Rain droplets canvas (soothing) ====== */
+    canvas#rain{position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.25;}
+
+    /* ====== Layout ====== */
+    .container{max-width:var(--max); margin:0 auto; padding:24px}
+    header{position:sticky; top:0; backdrop-filter: blur(10px); background:rgba(0,0,0,.15); border-bottom:1px solid var(--card-border); z-index:10}
+    nav{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .brand{font-weight:900; letter-spacing:.3px}
+    .navlinks a{display:inline-block; padding:10px 12px; text-decoration:none; color:var(--muted); font-weight:600}
+    .navlinks a:hover{color:#fff}
+    .btn{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px; border:1px solid var(--card-border); background:var(--card); box-shadow:var(--shadow); text-decoration:none}
+    .section{padding:64px 0}
+    .card{background:var(--card); border:1px solid var(--card-border); border-radius:18px; padding:24px; box-shadow:var(--shadow)}
+    h1{font-size:clamp(34px,6vw,64px); margin:0 0 8px}
+    h2{font-size:clamp(24px,4vw,36px); margin:0 0 16px}
     p{line-height:1.7; color:var(--muted)}
     .center{text-align:center}
-    .icons{display:flex; gap:12px; justify-content:center; margin-top:12px}
-    .iconbtn{display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; border:1px solid var(--card-border);
-      background: var(--card); box-shadow: var(--shadow); color:#fff}
-    .iconbtn svg{width:22px; height:22px}
+    .grid{display:grid; gap:16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))}
 
-    details{background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:16px; box-shadow: var(--shadow)}
+    /* Icons row */
+    .icons{display:flex; gap:12px; justify-content:center; margin-top:12px}
+    .iconbtn{display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.1); border:1px solid var(--card-border); box-shadow:var(--shadow)}
+    .iconbtn:hover{transform:translateY(-2px)}
+    svg{width:22px; height:22px}
+
+    /* Typewriter with binary flip */
+    .typer{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; color:#fff; font-weight:700}
+    .muted{color:var(--muted)}
+
+    /* Accordions for Experience/Projects */
+    details{background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:16px; box-shadow:var(--shadow)}
     details + details{margin-top:12px}
-    summary{cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:800}
+    summary{cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700}
     summary::marker{display:none}
-    .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--card-border); background:rgba(255,255,255,.1); color:var(--muted)}
+    .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--card-border); background:rgba(255,255,255,.06); color:var(--muted)}
+
+    footer{border-top:1px solid var(--card-border); padding:32px 0; text-align:center; color:var(--muted)}
+    .chips{display:flex; gap:10px; flex-wrap:wrap}
 
     html{scroll-behavior:smooth}
   </style>
 </head>
 <body>
+  <!-- Animated background & rain layer -->
   <div class="bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
   <canvas id="rain"></canvas>
 
+  <!-- ====== Header / Nav (anchors scroll down the single page) ====== -->
   <header>
-    <nav>
-      <a class="nav-typer" href="#home" data-text="Home">Home</a>
-      <a class="nav-typer" href="#about" data-text="About">About</a>
-      <a class="nav-typer" href="#experience" data-text="Experience">Experience</a>
-      <a class="nav-typer" href="#projects" data-text="Projects">Projects</a>
-      <a class="nav-typer" href="#contact" data-text="Contact">Contact</a>
-    </nav>
+    <div class="container">
+      <nav>
+        <div class="brand">SM</div>
+        <div class="navlinks">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <!-- ===== HOME ===== -->
+  <main class="container">
+    <!-- ====== HOME / HERO ====== -->
     <section id="home" class="section center">
       <div class="card" style="padding:40px">
         <h1 class="typer" data-text="Sarthak Madan">Sarthak Madan</h1>
         <p><strong>California State University, East Bay</strong></p>
-        <div class="icons" aria-label="social links">
-          <!-- LinkedIn -->
-          <a class="iconbtn" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+        <div class="icons">
+          <a class="iconbtn" href="https://www.linkedin.com/in/madansarthak" target="_blank" aria-label="LinkedIn" rel="noreferrer">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.5 8.5h4V23h-4V8.5ZM8.5 8.5h3.82v1.98h.05c.53-1 1.82-2.05 3.75-2.05 4.01 0 4.75 2.64 4.75 6.08V23h-4v-5.65c0-1.35-.02-3.08-1.88-3.08-1.88 0-2.17 1.47-2.17 2.98V23h-4V8.5Z" fill="currentColor"/></svg>
           </a>
-          <!-- GitHub -->
-          <a class="iconbtn" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer" aria-label="GitHub">
+          <a class="iconbtn" href="https://github.com/SarthakMadan6" target="_blank" aria-label="GitHub" rel="noreferrer">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.1-.76.08-.74.08-.74 1.22.09 1.86 1.26 1.86 1.26 1.08 1.86 2.84 1.32 3.53 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.48-1.34-5.48-5.97 0-1.32.47-2.4 1.24-3.24-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.92 1.24 3.24 0 4.64-2.81 5.66-5.49 5.96.43.37.81 1.1.81 2.23v3.3c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" fill="currentColor"/></svg>
           </a>
-          <!-- Gmail -->
           <a class="iconbtn" href="mailto:sarthakmadan6@gmail.com" aria-label="Gmail">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 5.5v13a1.5 1.5 0 0 1-1.5 1.5H3.5A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5Z" stroke="currentColor"/><path d="M3 6.5 12 12l9-5.5" stroke="currentColor"/></svg>
           </a>
         </div>
+        <p class="muted" style="margin-top:12px">Technologist & analyst building reliable software and data‑driven products.</p>
       </div>
     </section>
 
-    <!-- ===== ABOUT ===== -->
+    <!-- ====== ABOUT ====== -->
     <section id="about" class="section">
       <div class="card">
         <h2>About</h2>
         <p class="typer" data-text="I turn messy problems into clean systems."></p>
         <p>Hi, I’m Sarthak. I enjoy shipping useful tools, simplifying workflows, and connecting dots across software, data, and business. Off work: tennis, pickleball, F1, and tinkering with trading systems.</p>
+        <div class="chips">
+          <span class="tag">Java</span><span class="tag">C#</span><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">ASP.NET</span><span class="tag">React</span>
+        </div>
       </div>
     </section>
 
-    <!-- ===== EXPERIENCE (Accordion) ===== -->
+    <!-- ====== EXPERIENCE (Accordion) ====== -->
     <section id="experience" class="section">
       <h2>Experience</h2>
       <details>
@@ -132,11 +148,11 @@
           <span><strong>IT Systems Analyst — Polyplex USA LLC</strong> · 2024–2025</span>
           <span class="tag">C# / ASP.NET / SQL</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <ul>
-            <li>Built and deployed a full-stack visitor management system across the facility.</li>
-            <li>Refactored ERP modules into modular components to improve resilience.</li>
-            <li>Automated infrastructure workflows and backups.</li>
+            <li>Built and deployed a full‑stack visitor management system that modernized facility operations and compliance.</li>
+            <li>Refactored ERP modules into scalable, modular components that strengthened system resilience and adaptability.</li>
+            <li>Automated infrastructure workflows that eliminated manual overhead and accelerated deployment cycles.</li>
           </ul>
         </div>
       </details>
@@ -145,10 +161,11 @@
           <span><strong>Software Engineer Intern — Persistent Systems Inc.</strong> · 2024</span>
           <span class="tag">C++ / Microservices</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <ul>
             <li>Streamlined imaging systems via automation; reduced manual interventions.</li>
-            <li>Re-architected dependencies into microservices for efficient deployments.</li>
+            <li>Re‑architected dependencies into microservices to improve deployment efficiency.</li>
+            <li>Optimized configurations to accelerate data throughput.</li>
           </ul>
         </div>
       </details>
@@ -157,10 +174,11 @@
           <span><strong>Java Developer — Helix Tech IT</strong> · 2024</span>
           <span class="tag">Spring Boot / DB Design</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <ul>
-            <li>Engineered a ticketing system that automated workflows and accelerated resolution.</li>
-            <li>Built distributed microservices and refined schemas to improve latency.</li>
+            <li>Engineered a ticketing system that automated workflows and elevated resolution speed.</li>
+            <li>Built distributed microservices; refined schemas to improve latency and integrity.</li>
+            <li>Improved maintainability via rigorous code reviews and concurrency tuning.</li>
           </ul>
         </div>
       </details>
@@ -169,7 +187,7 @@
           <span><strong>Software Engineer Intern — Nile Automotive</strong> · 2022</span>
           <span class="tag">Python / ERP</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <ul>
             <li>Implemented ERP features for production tracking and supply chain visibility.</li>
             <li>Automated resource allocation; minimized machine downtime.</li>
@@ -178,7 +196,7 @@
       </details>
     </section>
 
-    <!-- ===== PROJECTS (Accordion) ===== -->
+    <!-- ====== PROJECTS (Accordion) ====== -->
     <section id="projects" class="section">
       <h2>Projects</h2>
       <details>
@@ -186,8 +204,8 @@
           <span><strong>Visitor Management System</strong></span>
           <span class="tag">C# · ASP.NET · SQL Server</span>
         </summary>
-        <div style="margin-top:12px">
-          <p>Facility-wide platform for check-ins, reporting, audits; role-based access and exportable reports.</p>
+        <div style="margin-top:12px" class="muted">
+          <p>Facility‑wide platform for check‑ins, reporting, audits; role‑based access and exportable reports.</p>
         </div>
       </details>
       <details>
@@ -195,113 +213,73 @@
           <span><strong>Algo Trading Bot</strong></span>
           <span class="tag">Python · pandas</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <p>Strategy backtesting + live execution with risk controls and analytics dashboards.</p>
         </div>
       </details>
       <details>
         <summary>
-          <span><strong>AI Self-Driving Car (Sim)</strong></span>
+          <span><strong>AI Self‑Driving Car (Sim)</strong></span>
           <span class="tag">Python · RL</span>
         </summary>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px" class="muted">
           <p>Path planning and control in simulation; experiments with reinforcement learning policies.</p>
         </div>
       </details>
     </section>
 
-    <!-- ===== CONTACT ===== -->
+    <!-- ====== CONTACT ====== -->
     <section id="contact" class="section center">
       <div class="card" style="padding:32px">
         <h2>Contact</h2>
         <p>Let’s build something useful. Reach me at <a href="mailto:sarthakmadan6@gmail.com">sarthakmadan6@gmail.com</a> or connect on <a href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>.</p>
         <div class="icons" style="margin-top:8px">
-          <!-- View resume -->
-          <a class="iconbtn" href="/resume.pdf" target="_blank" rel="noopener" aria-label="View Résumé">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.5h8L18.5 7v14a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 21V4A1.5 1.5 0 0 1 6 2.5Z" stroke="currentColor"/><path d="M14 2.5V7h4.5" stroke="currentColor"/></svg>
-          </a>
-          <!-- Download resume -->
-          <a class="iconbtn" href="/resume.pdf" download aria-label="Download Résumé">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12" stroke="currentColor"/><path d="M8 11l4 4 4-4" stroke="currentColor"/><path d="M4 20h16" stroke="currentColor"/></svg>
-          </a>
+          <a class="btn" href="/resume.pdf" download>Download Résumé</a>
         </div>
       </div>
     </section>
   </main>
 
+  <footer>
+    © <span id="year"></span> Sarthak Madan • Built for GitHub Pages
+  </footer>
+
   <script>
-    /* ===== Fast dense rain (vertical streaks) ===== */
+    // Dynamic year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ====== Soothing Rain Droplets on Canvas ======
     const rain = document.getElementById('rain');
     const ctx = rain.getContext('2d');
-    let drops=[], W, H, last=0;
-    function resize(){
-      W = rain.width = innerWidth; H = rain.height = innerHeight;
-      const N = Math.floor(W*H/4500); // density
-      drops = Array.from({length:N},()=>({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        len: 8 + Math.random()*18,
-        v: 180 + Math.random()*320, // px/sec
-        a: .45 + Math.random()*.35
-      }));
-    }
-    function frame(ts){
-      const dt = ((ts - last) || 16) / 1000; last = ts;
-      ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='screen';
-      ctx.lineWidth = 1;
-      for(const d of drops){
-        d.y += d.v * dt; if(d.y > H+20) d.y = -d.len;
-        ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x, d.y + d.len);
-        ctx.strokeStyle = `rgba(255,255,255,${d.a})`; ctx.stroke();
-      }
+    let drops=[]; let W,H; let last=0;
+    function resize(){ W = rain.width = innerWidth; H = rain.height = innerHeight; drops = Array.from({length: Math.floor(W*H/9000)}, () => newDrop()); }
+    function newDrop(){ return {x: Math.random()*W, y: Math.random()*-H, r: Math.random()*1.8+0.4, v: Math.random()*1.2+0.3, a: Math.random()*0.4+0.3} }
+    function frame(ts){ const dt = (ts-last)||16; last=ts; ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='lighter';
+      for(const d of drops){ d.y += d.v*dt*0.06; ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${d.a})`; ctx.fill(); if(d.y>d.r+H) Object.assign(d,newDrop(),{y:-10}); }
       requestAnimationFrame(frame);
     }
     addEventListener('resize', resize); resize(); requestAnimationFrame(frame);
 
-    /* ===== Binary typewriter (guarantees single spacing) ===== */
+    // ====== Typewriter with fast 0/1 flip reveal ======
     function binaryType(el){
-      const target=(el.dataset.text||el.textContent).replace(/\s+/g,' ').trim();
-      const steps=18; const chars=target.split(''); let frame=0;
-      (function tick(){
-        let done=true, out='';
+      const target = el.dataset.text || el.textContent.trim();
+      const steps = 18; // number of flips per character
+      const chars = target.split('');
+      let frame = 0; let out = new Array(chars.length).fill('');
+      function tick(){
+        let done = true; let str = '';
         for(let i=0;i<chars.length;i++){
-          const revealAt=i*2;
-          if(frame<revealAt+steps){ done=false; out += (frame<revealAt?' ':(Math.random()>.5?'0':'1')); }
-          else out += chars[i];
+          const revealAt = i*2; // staggered reveal
+          if(frame < revealAt + steps){ done = false; str += (frame < revealAt ? ' ' : (Math.random() > 0.5 ? '0':'1')); }
+          else { str += chars[i]; out[i]=chars[i]; }
         }
-        el.textContent=out; frame++;
-        if(!done) requestAnimationFrame(tick); else el.textContent=target;
-      })();
+        el.textContent = str;
+        frame++;
+        if(!done) requestAnimationFrame(tick);
+      }
+      tick();
     }
     document.querySelectorAll('.typer').forEach(binaryType);
-
-    /* ===== 0/1 flip on nav hover, but keep width stable ===== */
-    (function navFlip(){
-      document.querySelectorAll('nav a').forEach(a=>{
-        const w = a.getBoundingClientRect().width;
-        a.style.width = Math.ceil(w)+"px";  // lock width so nothing shifts
-        const label = (a.dataset.text||a.textContent).trim();
-        a.addEventListener('mouseenter', ()=>{
-          if(a.__flipping) return; a.__flipping=true; const steps=12; let frame=0; const chars=label.split('');
-          (function run(){
-            let done=true, out='';
-            for(let i=0;i<chars.length;i++){
-              const revealAt=i*1.3;
-              if(frame<revealAt+steps){ done=false; out += (frame<revealAt?' ':(Math.random()>.5?'0':'1')); }
-              else out += chars[i];
-            }
-            a.textContent=out; frame++;
-            if(!done) requestAnimationFrame(run); else { a.textContent=label; a.__flipping=false; }
-          })();
-        });
-      });
-    })();
-
-    /* Optional: fallback redirect www -> apex (no regex) */
-    if(location.hostname.indexOf('www.')===0){
-      const apex = location.hostname.slice(4);
-      location.replace(`https://${apex}${location.pathname}${location.search}${location.hash}`);
-    }
   </script>
 </body>
 </html>
