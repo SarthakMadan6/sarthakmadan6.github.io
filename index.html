@@ -15,58 +15,69 @@
       --card:rgba(255,255,255,.06);
       --card-border:rgba(255,255,255,.12);
       --shadow:0 10px 30px rgba(0,0,0,.35);
-      --ferrari:#E10600;      /* Ferrari red */
-      --ferrari-dark:#B50E0E; /* darker accent */
+      --ferrari:#E10600;
+      --ferrari-dark:#B50E0E;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,Helvetica,sans-serif;color:var(--text);
-      background:var(--bg1);overflow-x:hidden;position:relative;min-height:100vh;}
+    body{
+      font-family:Arial,Helvetica,sans-serif;color:var(--text);
+      background:var(--bg1);overflow-x:hidden;position:relative;min-height:100vh;
+    }
 
+    /* Header (no box; blends with bg) */
     header{position:sticky;top:0;background:transparent;z-index:50;padding:16px}
     nav{display:flex;align-items:center;justify-content:center;gap:40px}
     nav a{font-weight:700;text-decoration:none;color:var(--text);font-size:1rem;transition:text-shadow .3s ease}
     nav a:hover{text-shadow:0 0 6px rgba(255,255,255,0.6)}
 
+    /* Sections / cards */
     .section{padding:64px 0;max-width:1100px;margin:auto}
-    .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
-    h1{font-size:clamp(34px,6vw,64px);margin-bottom:12px;text-align:center;position:relative;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--card-border);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      overflow:hidden;               /* <-- clips skids/smoke inside card */
+      position:relative;
+    }
     h2{font-size:clamp(24px,4vw,36px);margin-bottom:16px;text-align:center}
     p{line-height:1.6;color:var(--muted)}
     .center{text-align:center}
     .icons{display:flex;gap:12px;justify-content:center;margin-top:12px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);box-shadow:var(--shadow);text-decoration:none;color:#fff;font-weight:600}
 
-    /* Subtle lightning flash layer (unchanged) */
-    .lightning{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:transparent;}
+    /* Lightning overlay (subtle) */
+    .lightning{position:fixed;inset:0;pointer-events:none;z-index:0;background:transparent;}
     .flash{animation:flashAnim 6s infinite;}
     @keyframes flashAnim{
       0%,96%,100%{background:transparent}
-      97%{background:rgba(255,255,255,.2)}
-      98%{background:rgba(255,255,255,.4)}
-      99%{background:rgba(255,255,255,.2)}
+      97%{background:rgba(255,255,255,.18)}
+      98%{background:rgba(255,255,255,.36)}
+      99%{background:rgba(255,255,255,.18)}
     }
 
     /* Experience & Projects */
     .exp-card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
     .exp-card h3{margin:0;color:#fff}
 
-    /* ---------- F1 DRIFT HERO ---------- */
-    #hero{position:relative;height:160px;margin-bottom:6px}
-    #hero svg{width:100%;height:100%;overflow:visible;display:block}
-
-    /* name text never gets other animations */
+    /* ===== HERO: F1 drift inside the card ===== */
+    #hero-wrap{position:relative;height:170px;margin-bottom:6px}
+    #hero{width:100%;height:100%;display:block}
+    /* Name text in SVG (no other animations) */
     #hero text{font:800 clamp(36px,7vw,72px)/1 Arial,Helvetica,sans-serif; fill:#fff}
 
-    /* Ferrari car styling */
+    /* Ferrari styling */
     .car{filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
     .car .body{fill:var(--ferrari)}
     .car .accent{fill:var(--ferrari-dark)}
-    .car .tyre{fill:#222}
-    .car .rim{fill:#a8a8a8}
-    .car .halo{fill:#111}
+    .car .tyre{fill:#1d1d1d}
+    .car .rim{fill:#bbbbbb}
+    .car .halo{fill:#0e0e0e}
 
-    /* Skid path stroke */
-    #skids path{stroke:rgba(0,0,0,.22); stroke-width:3; fill:none; stroke-linecap:round; filter:blur(.2px)}
+    /* Skids */
+    #skids path{stroke:rgba(0,0,0,.25); stroke-width:3; fill:none; stroke-linecap:round; filter:blur(.2px)}
   </style>
 </head>
 <body>
@@ -83,59 +94,65 @@
   </header>
 
   <main>
-    <!-- ========== HOME / HERO with Ferrari drift ========== -->
+    <!-- ================= HOME / HERO ================= -->
     <section id="home" class="section center">
       <div class="card" style="padding:40px">
-        <div id="hero" aria-label="Sarthak Madan hero animation">
-          <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice">
-            <!-- smoke mask that reveals the text -->
-            <mask id="smokeMask">
-              <rect x="0" y="0" width="1200" height="160" fill="black"/>
-              <g id="smoke"></g>
-            </mask>
+        <!-- Everything in this wrapper is clipped by the card -->
+        <div id="hero-wrap" aria-label="Sarthak Madan hero animation">
+          <svg id="hero" viewBox="0 0 1200 170" preserveAspectRatio="xMidYMid slice">
+            <!-- clipPath matches SVG bounds, but card overflow:hidden is the main guard -->
+            <defs>
+              <clipPath id="clipAll">
+                <rect x="0" y="0" width="1200" height="170" rx="16" ry="16"/>
+              </clipPath>
+              <!-- Smoke mask: white = reveal -->
+              <mask id="smokeMask">
+                <rect x="0" y="0" width="1200" height="170" fill="black"/>
+                <g id="smoke"></g>
+              </mask>
+            </defs>
 
-            <!-- Skid marks below everything -->
-            <g id="skids"></g>
+            <g clip-path="url(#clipAll)">
+              <!-- Skids (under everything) -->
+              <g id="skids"></g>
 
-            <!-- Name text, revealed by smoke mask -->
-            <text id="nameText" x="50%" y="55%" text-anchor="middle" mask="url(#smokeMask)">Sarthak Madan</text>
+              <!-- Name text, revealed by smoke -->
+              <text x="50%" y="56%" text-anchor="middle" mask="url(#smokeMask)">Sarthak Madan</text>
 
-            <!-- Ferrari F1 (compact silhouette) -->
-            <g id="car" class="car" transform="translate(-140,120)">
-              <!-- rear wing -->
-              <rect class="accent" x="-40" y="-18" rx="2" ry="2" width="28" height="10"/>
-              <!-- main body pod -->
-              <rect class="body" x="-10" y="-20" rx="4" ry="4" width="72" height="22"/>
-              <!-- engine cover / shark fin -->
-              <path class="body" d="M18 -22 L34 -22 L38 -16 L28 -10 L18 -10 Z"/>
-              <!-- sidepod intake -->
-              <ellipse class="accent" cx="6" cy="-10" rx="5" ry="3"/>
-              <!-- front nose -->
-              <rect class="body" x="38" y="-14" rx="3" ry="3" width="30" height="14"/>
-              <!-- front wing -->
-              <rect class="accent" x="64" y="-16" rx="2" ry="2" width="28" height="8"/>
-              <!-- halo -->
-              <rect class="halo" x="10" y="-18" rx="2" ry="2" width="12" height="4"/>
-              <rect class="halo" x="16" y="-18" width="3" height="8" />
-              <!-- tyres -->
-              <circle class="tyre" cx="8" cy="6" r="11"/>
-              <circle class="tyre" cx="60" cy="6" r="11"/>
-              <circle class="rim" cx="8" cy="6" r="4.5"/>
-              <circle class="rim" cx="60" cy="6" r="4.5"/>
+              <!-- Ferrari F1 (compact but realistic silhouette) -->
+              <g id="car" class="car" transform="translate(-160,125)">
+                <!-- rear wing -->
+                <path class="accent" d="M-46 -22 h34 a3 3 0 0 1 3 3 v8 h-40 v-8 a3 3 0 0 1 3 -3z"/>
+                <!-- main body + engine cover -->
+                <path class="body" d="M-16 -22 h84 q10 0 14 8 l10 10 h-20 l-10 -6 h-54 q-8 0 -14 6 h-24 q8 -10 14 -18 q4 -6 10 -6z"/>
+                <!-- sidepods -->
+                <path class="accent" d="M0 -14 h34 q10 0 16 8 h-52 q-6 -8 2 -8z"/>
+                <!-- nose -->
+                <path class="body" d="M60 -12 h40 q6 0 6 6 v6 h-40 q-6 0 -6 -6z"/>
+                <!-- front wing -->
+                <path class="accent" d="M94 -16 h38 q3 0 3 3 v6 h-50 v-6 q0 -3 3 -3z"/>
+                <!-- halo -->
+                <rect class="halo" x="14" y="-18" width="18" height="4" rx="2"/>
+                <rect class="halo" x="22" y="-18" width="3" height="10"/>
+
+                <!-- tyres -->
+                <circle class="tyre" cx="6"  cy="7" r="12"/><circle class="rim" cx="6"  cy="7" r="4.5"/>
+                <circle class="tyre" cx="76" cy="7" r="12"/><circle class="rim" cx="76" cy="7" r="4.5"/>
+              </g>
             </g>
           </svg>
         </div>
 
         <p><strong>California State University, East Bay</strong></p>
         <div class="icons">
-          <a class="btn" href="https://www.linkedin.com/in/madansarthak" target="_blank">LinkedIn</a>
-          <a class="btn" href="https://github.com/SarthakMadan6" target="_blank">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a class="btn" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer">GitHub</a>
           <a class="btn" href="mailto:sarthakmadan6@gmail.com">Email</a>
         </div>
       </div>
     </section>
 
-    <!-- ========== EXPERIENCE ========== -->
+    <!-- ================= EXPERIENCE ================= -->
     <section id="experience" class="section">
       <h2>Experience</h2>
       <div class="exp-card"><h3>IT Systems Analyst — Polyplex USA LLC · 2024–2025</h3></div>
@@ -145,7 +162,7 @@
       <div class="exp-card"><h3>Software Engineering Intern — Escorts Kubota Ltd · 2019</h3></div>
     </section>
 
-    <!-- ========== PROJECTS ========== -->
+    <!-- ================= PROJECTS ================= -->
     <section id="projects" class="section">
       <h2>Projects</h2>
       <div class="exp-card"><h3>Visitor Management System — C# · ASP.NET · SQL Server</h3></div>
@@ -153,60 +170,55 @@
       <div class="exp-card"><h3>AI Self-Driving Car Model — Python · TensorFlow</h3></div>
     </section>
 
-    <!-- ========== CONTACT ========== -->
+    <!-- ================= CONTACT ================= -->
     <section id="contact" class="section">
-      <div class="contact-card">
+      <div class="card contact-card">
         <h2>Contact</h2>
         <p>Let’s build something useful. Reach me at
           <a href="mailto:sarthakmadan6@gmail.com" style="color:#fff;text-decoration:underline">sarthakmadan6@gmail.com</a>
           or connect on
           <a href="https://www.linkedin.com/in/madansarthak" target="_blank" style="color:#fff;text-decoration:underline">LinkedIn</a>.
         </p>
-        <div class="contact-actions">
-          <a class="iconbtn" href="/resume.pdf" target="_blank" aria-label="View Resume">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.5h8L18.5 7v14a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 21V4A1.5 1.5 0 0 1 6 2.5Z" stroke="currentColor"/><path d="M14 2.5V7h4.5" stroke="currentColor"/></svg>
-          </a>
-          <a class="iconbtn" href="/resume.pdf" download aria-label="Download Resume">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12" stroke="currentColor"/><path d="M8 11l4 4 4-4" stroke="currentColor"/><path d="M4 20h16" stroke="currentColor"/></svg>
-          </a>
+        <div class="icons">
+          <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">View Résumé</a>
+          <a class="btn" href="/resume.pdf" download>Download</a>
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    // ===== Ferrari drift: smoke reveal + skid + drive-off =====
+    // ===== Ferrari drift: smoke reveal + skids, all clipped inside the card =====
     (function(){
-      const svg   = document.querySelector('#hero svg');
+      const svg   = document.getElementById('hero');
       if(!svg) return;
       const smoke = svg.querySelector('#smoke');
       const skids = svg.querySelector('#skids');
       const car   = svg.querySelector('#car');
 
-      const W = 1200, H = 160;
-      const baseY = 120;
-      let   x = -140;               // start left off-screen
-      const exitX = W + 160;        // exit right off-screen
-      let   v = 9.0;                // base speed (px per frame)
+      const W = 1200, H = 170;
+      const baseY = 125;
+      let   x = -160;                 // start left off-screen
+      const exitX = W + 180;          // leave to the right
+      let   v = 9.0;                  // base speed
       let   t = 0;
 
-      // prebuild a skid path element we will extend as the car slides
+      // main skid path
       const skidPath = document.createElementNS('http://www.w3.org/2000/svg','path');
-      skidPath.setAttribute('d', `M ${x} ${baseY+8}`);
+      skidPath.setAttribute('d', `M ${x} ${baseY+10}`);
       skids.appendChild(skidPath);
 
       function extendSkid(nx, ny){
-        const d = skidPath.getAttribute('d') + ` L ${nx} ${ny+8}`;
+        const d = skidPath.getAttribute('d') + ` L ${nx} ${ny+10}`;
         skidPath.setAttribute('d', d);
       }
 
-      function puff(px, py, r0=6, r1=90, dur=0.9){
+      function puff(px, py, r0=6, r1=95, dur=0.95){
         const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
         c.setAttribute('cx', px);
         c.setAttribute('cy', py);
         c.setAttribute('r', r0);
         c.setAttribute('fill', '#fff');
-        // radius animation
         const a = document.createElementNS('http://www.w3.org/2000/svg','animate');
         a.setAttribute('attributeName','r');
         a.setAttribute('from', String(r0));
@@ -219,35 +231,30 @@
       }
 
       function tick(){
-        t += 1;
+        t++;
 
-        // drift wiggle
+        // drift wobble
         const y = baseY + Math.sin(t/10)*10;
-
-        // move car
         car.setAttribute('transform', `translate(${x},${y})`);
 
-        // smoke puffs trailing rear left
+        // smoke puffs from rear
         if(t % 2 === 0){
-          puff(x - 16, y - 1 + (Math.random()*6 - 3));
-          if(Math.random() < 0.35) puff(x - 26, y + (Math.random()*10 - 5), 5, 70, 0.8);
+          puff(x - 18, y - 2 + (Math.random()*6 - 3));
+          if(Math.random() < 0.4) puff(x - 28, y + (Math.random()*10 - 5), 5, 80, 0.85);
         }
 
-        // extend skid line subtly
-        if(t % 1 === 0){
-          extendSkid(x, y);
-        }
+        // extend skid
+        extendSkid(x, y);
 
-        // accel then ease
+        // accelerate then ease
         if(x < W*0.35) v += 0.06;
-        else if(x > W*0.7) v -= 0.05;
+        else if(x > W*0.72) v -= 0.05;
 
         x += v;
-        if(x <= exitX){ requestAnimationFrame(tick); }
+        if(x <= exitX) requestAnimationFrame(tick);
       }
 
-      // start after slight delay
-      setTimeout(()=>requestAnimationFrame(tick), 280);
+      setTimeout(()=>requestAnimationFrame(tick), 250);
     })();
   </script>
 </body>
