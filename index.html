@@ -9,185 +9,165 @@
   <meta name="theme-color" content="#FF7529" />
   <style>
     :root{
-      --bg1:#FF7529;    /* orange */
-      --bg2:#291D4A;    /* deep violet */
+      --bg1:#FF7529;
       --text:#f8fafc;
       --muted:#cbd5e1;
       --card:rgba(255,255,255,.06);
-      --card-border:rgba(255,255,255,.14);
+      --card-border:rgba(255,255,255,.12);
       --shadow:0 10px 30px rgba(0,0,0,.35);
-      --max:1100px;
+      --ferrari:#E10600;      /* Ferrari red */
+      --ferrari-dark:#B50E0E; /* darker accent */
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;color:var(--text);
-      background:linear-gradient(120deg,var(--bg1),var(--bg2));
-      min-height:100vh; overflow-x:hidden; position:relative;
-    }
+    body{font-family:Arial,Helvetica,sans-serif;color:var(--text);
+      background:var(--bg1);overflow-x:hidden;position:relative;min-height:100vh;}
 
-    /* ---------- FX canvas (subtle lightning) ---------- */
-    #fx{position:fixed;inset:0;pointer-events:none;z-index:0}
+    header{position:sticky;top:0;background:transparent;z-index:50;padding:16px}
+    nav{display:flex;align-items:center;justify-content:center;gap:40px}
+    nav a{font-weight:700;text-decoration:none;color:var(--text);font-size:1rem;transition:text-shadow .3s ease}
+    nav a:hover{text-shadow:0 0 6px rgba(255,255,255,0.6)}
 
-    /* ---------- Header / Nav (no box; blends with bg) ---------- */
-    header{position:sticky;top:0;z-index:50; background:transparent; border-bottom:none}
-    nav{display:flex;align-items:center;justify-content:center;gap:48px;padding:16px}
-    nav a{
-      text-decoration:none; color:var(--text); font-weight:800; letter-spacing:.2px;
-      transition: text-shadow .18s ease, color .18s ease;
-      white-space:nowrap;
-    }
-    nav a:hover{ text-shadow:0 0 6px rgba(255,255,255,.35); color:#fff }
-
-    /* ---------- Layout / Cards ---------- */
-    .section{padding:68px 20px;max-width:var(--max);margin:0 auto}
-    .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-    h1{font-size:clamp(36px,7vw,72px);margin-bottom:12px;text-align:center}
-    h2{font-size:clamp(26px,4.5vw,40px);margin-bottom:20px}
-    p{line-height:1.65;color:var(--muted)}
+    .section{padding:64px 0;max-width:1100px;margin:auto}
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    h1{font-size:clamp(34px,6vw,64px);margin-bottom:12px;text-align:center;position:relative;}
+    h2{font-size:clamp(24px,4vw,36px);margin-bottom:16px;text-align:center}
+    p{line-height:1.6;color:var(--muted)}
     .center{text-align:center}
     .icons{display:flex;gap:12px;justify-content:center;margin-top:12px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);box-shadow:var(--shadow);text-decoration:none;color:#fff;font-weight:600}
 
-    /* ---------- Accordions with spacing ---------- */
-    details{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-    details + details{margin-top:16px}           /* spacing between boxes */
-    summary{cursor:pointer;list-style:none;font-weight:800}
-    summary::marker{display:none}
-    .muted{color:var(--muted)}
-    ul{margin:8px 0 0 18px}
-    li{margin:6px 0}
-
-    /* ---------- Contact card (aesthetic) ---------- */
-    .contact-card{
-      margin:0 auto;max-width:860px;padding:40px 28px;
-      border-radius:22px;border:1px solid var(--card-border);
-      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
-      box-shadow:0 20px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.15);
-      backdrop-filter:blur(12px) saturate(140%); text-align:center;
+    /* Subtle lightning flash layer (unchanged) */
+    .lightning{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:transparent;}
+    .flash{animation:flashAnim 6s infinite;}
+    @keyframes flashAnim{
+      0%,96%,100%{background:transparent}
+      97%{background:rgba(255,255,255,.2)}
+      98%{background:rgba(255,255,255,.4)}
+      99%{background:rgba(255,255,255,.2)}
     }
-    .contact-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:14px}
-    .contact-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:1px solid var(--card-border);background:rgba(255,255,255,.08);text-decoration:none;color:#fff;font-weight:700;box-shadow:var(--shadow)}
-    .contact-btn svg{width:20px;height:20px}
 
-    /* ---------- Smooth scroll ---------- */
-    html{scroll-behavior:smooth}
+    /* Experience & Projects */
+    .exp-card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+    .exp-card h3{margin:0;color:#fff}
+
+    /* ---------- F1 DRIFT HERO ---------- */
+    #hero{position:relative;height:160px;margin-bottom:6px}
+    #hero svg{width:100%;height:100%;overflow:visible;display:block}
+
+    /* name text never gets other animations */
+    #hero text{font:800 clamp(36px,7vw,72px)/1 Arial,Helvetica,sans-serif; fill:#fff}
+
+    /* Ferrari car styling */
+    .car{filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+    .car .body{fill:var(--ferrari)}
+    .car .accent{fill:var(--ferrari-dark)}
+    .car .tyre{fill:#222}
+    .car .rim{fill:#a8a8a8}
+    .car .halo{fill:#111}
+
+    /* Skid path stroke */
+    #skids path{stroke:rgba(0,0,0,.22); stroke-width:3; fill:none; stroke-linecap:round; filter:blur(.2px)}
   </style>
 </head>
 <body>
-  <!-- Subtle lightning layer -->
-  <canvas id="fx"></canvas>
+  <div class="lightning flash"></div>
 
-  <!-- Header with plain text links (no box) -->
   <header>
     <nav>
-      <a class="typer" href="#home" data-text="Home">Home</a>
-      <a class="typer" href="#about" data-text="About">About</a>
-      <a class="typer" href="#experience" data-text="Experience">Experience</a>
-      <a class="typer" href="#projects" data-text="Projects">Projects</a>
-      <a class="typer" href="#contact" data-text="Contact">Contact</a>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
   <main>
-    <!-- HOME -->
+    <!-- ========== HOME / HERO with Ferrari drift ========== -->
     <section id="home" class="section center">
       <div class="card" style="padding:40px">
-        <h1 class="typer" data-text="Sarthak Madan">Sarthak Madan</h1>
-        <p class="typer" data-text="California State University, East Bay"><strong>California State University, East Bay</strong></p>
+        <div id="hero" aria-label="Sarthak Madan hero animation">
+          <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice">
+            <!-- smoke mask that reveals the text -->
+            <mask id="smokeMask">
+              <rect x="0" y="0" width="1200" height="160" fill="black"/>
+              <g id="smoke"></g>
+            </mask>
+
+            <!-- Skid marks below everything -->
+            <g id="skids"></g>
+
+            <!-- Name text, revealed by smoke mask -->
+            <text id="nameText" x="50%" y="55%" text-anchor="middle" mask="url(#smokeMask)">Sarthak Madan</text>
+
+            <!-- Ferrari F1 (compact silhouette) -->
+            <g id="car" class="car" transform="translate(-140,120)">
+              <!-- rear wing -->
+              <rect class="accent" x="-40" y="-18" rx="2" ry="2" width="28" height="10"/>
+              <!-- main body pod -->
+              <rect class="body" x="-10" y="-20" rx="4" ry="4" width="72" height="22"/>
+              <!-- engine cover / shark fin -->
+              <path class="body" d="M18 -22 L34 -22 L38 -16 L28 -10 L18 -10 Z"/>
+              <!-- sidepod intake -->
+              <ellipse class="accent" cx="6" cy="-10" rx="5" ry="3"/>
+              <!-- front nose -->
+              <rect class="body" x="38" y="-14" rx="3" ry="3" width="30" height="14"/>
+              <!-- front wing -->
+              <rect class="accent" x="64" y="-16" rx="2" ry="2" width="28" height="8"/>
+              <!-- halo -->
+              <rect class="halo" x="10" y="-18" rx="2" ry="2" width="12" height="4"/>
+              <rect class="halo" x="16" y="-18" width="3" height="8" />
+              <!-- tyres -->
+              <circle class="tyre" cx="8" cy="6" r="11"/>
+              <circle class="tyre" cx="60" cy="6" r="11"/>
+              <circle class="rim" cx="8" cy="6" r="4.5"/>
+              <circle class="rim" cx="60" cy="6" r="4.5"/>
+            </g>
+          </svg>
+        </div>
+
+        <p><strong>California State University, East Bay</strong></p>
         <div class="icons">
-          <a class="btn typer" data-text="LinkedIn" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a class="btn typer" data-text="GitHub" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn typer" data-text="Email" href="mailto:sarthakmadan6@gmail.com">Email</a>
+          <a class="btn" href="https://www.linkedin.com/in/madansarthak" target="_blank">LinkedIn</a>
+          <a class="btn" href="https://github.com/SarthakMadan6" target="_blank">GitHub</a>
+          <a class="btn" href="mailto:sarthakmadan6@gmail.com">Email</a>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section">
-      <div class="card">
-        <h2 class="typer" data-text="About">About</h2>
-        <p class="typer" data-text="I turn messy problems into clean systems.">I turn messy problems into clean systems.</p>
-        <p>Hi, I’m Sarthak. I enjoy shipping useful tools, simplifying workflows, and connecting dots across software, data, and business. Off work: tennis, pickleball, F1, and tinkering with trading systems.</p>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE (All items shown; each is a dropdown with spacing) -->
+    <!-- ========== EXPERIENCE ========== -->
     <section id="experience" class="section">
-      <h2 class="typer" data-text="Experience">Experience</h2>
-
-      <details open>
-        <summary class="typer" data-text="IT Systems Analyst — Polyplex USA LLC · 2024–2025">IT Systems Analyst — Polyplex USA LLC · 2024–2025</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Built and deployed a full-stack visitor management system across the facility.">Built and deployed a full-stack visitor management system across the facility.</li>
-          <li class="typer" data-text="Refactored ERP modules into modular components to improve resilience.">Refactored ERP modules into modular components to improve resilience.</li>
-          <li class="typer" data-text="Automated infrastructure workflows and backups.">Automated infrastructure workflows and backups.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Software Engineer Intern — Persistent Systems · 2024">Software Engineer Intern — Persistent Systems · 2024</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Streamlined imaging systems via automation; reduced manual interventions.">Streamlined imaging systems via automation; reduced manual interventions.</li>
-          <li class="typer" data-text="Re-architected dependencies into microservices for efficient deployments.">Re-architected dependencies into microservices for efficient deployments.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Java Developer — Helix Tech IT · 2024">Java Developer — Helix Tech IT · 2024</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Engineered a ticketing system that automated workflows and accelerated resolution.">Engineered a ticketing system that automated workflows and accelerated resolution.</li>
-          <li class="typer" data-text="Built distributed microservices and refined schemas to improve latency.">Built distributed microservices and refined schemas to improve latency.</li>
-        </ul>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Software Engineer Intern — Nile Automotive · 2022">Software Engineer Intern — Nile Automotive · 2022</summary>
-        <ul class="muted">
-          <li class="typer" data-text="Implemented ERP features for production tracking and supply chain visibility.">Implemented ERP features for production tracking and supply chain visibility.</li>
-          <li class="typer" data-text="Automated resource allocation; minimized machine downtime.">Automated resource allocation; minimized machine downtime.</li>
-        </ul>
-      </details>
+      <h2>Experience</h2>
+      <div class="exp-card"><h3>IT Systems Analyst — Polyplex USA LLC · 2024–2025</h3></div>
+      <div class="exp-card"><h3>Software Engineer Intern — Persistent Systems · 2024</h3></div>
+      <div class="exp-card"><h3>Java Software Developer — Helix Tech IT · 2021–2022</h3></div>
+      <div class="exp-card"><h3>Software Engineering Intern — Nile Automotive · 2020</h3></div>
+      <div class="exp-card"><h3>Software Engineering Intern — Escorts Kubota Ltd · 2019</h3></div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- ========== PROJECTS ========== -->
     <section id="projects" class="section">
-      <h2 class="typer" data-text="Projects">Projects</h2>
-
-      <details open>
-        <summary class="typer" data-text="Visitor Management System — C# · ASP.NET · SQL Server">Visitor Management System — C# · ASP.NET · SQL Server</summary>
-        <p class="muted typer" data-text="Facility-wide platform for check-ins, reporting, audits; role-based access and exportable reports.">
-          Facility-wide platform for check-ins, reporting, audits; role-based access and exportable reports.
-        </p>
-      </details>
-
-      <details open>
-        <summary class="typer" data-text="Algo Trading Bot — Python">Algo Trading Bot — Python</summary>
-        <p class="muted typer" data-text="Strategy backtesting + live execution with risk controls and analytics dashboards.">
-          Strategy backtesting + live execution with risk controls and analytics dashboards.
-        </p>
-      </details>
+      <h2>Projects</h2>
+      <div class="exp-card"><h3>Visitor Management System — C# · ASP.NET · SQL Server</h3></div>
+      <div class="exp-card"><h3>Algo Trading Bot — Python</h3></div>
+      <div class="exp-card"><h3>AI Self-Driving Car Model — Python · TensorFlow</h3></div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section center">
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="section">
       <div class="contact-card">
-        <h2 class="typer" data-text="Contact">Contact</h2>
-        <p class="typer" data-text="Let’s build something useful. Reach me at sarthakmadan6@gmail.com or connect on LinkedIn.">
-          Let’s build something useful. Reach me at <a href="mailto:sarthakmadan6@gmail.com">sarthakmadan6@gmail.com</a> or connect on
-          <a href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>.
+        <h2>Contact</h2>
+        <p>Let’s build something useful. Reach me at
+          <a href="mailto:sarthakmadan6@gmail.com" style="color:#fff;text-decoration:underline">sarthakmadan6@gmail.com</a>
+          or connect on
+          <a href="https://www.linkedin.com/in/madansarthak" target="_blank" style="color:#fff;text-decoration:underline">LinkedIn</a>.
         </p>
         <div class="contact-actions">
-          <a class="contact-btn typer" data-text="Email" href="mailto:sarthakmadan6@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="14" rx="1.5" stroke="currentColor"/><path d="M3 6l9 7 9-7" stroke="currentColor"/></svg>
-            Email
-          </a>
-          <a class="contact-btn typer" data-text="View Résumé" href="/resume.pdf" target="_blank" rel="noopener" aria-label="View Resume">
+          <a class="iconbtn" href="/resume.pdf" target="_blank" aria-label="View Resume">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.5h8L18.5 7v14a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 21V4A1.5 1.5 0 0 1 6 2.5Z" stroke="currentColor"/><path d="M14 2.5V7h4.5" stroke="currentColor"/></svg>
-            View Résumé
           </a>
-          <a class="contact-btn typer" data-text="Download" href="/resume.pdf" download aria-label="Download Resume">
+          <a class="iconbtn" href="/resume.pdf" download aria-label="Download Resume">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12" stroke="currentColor"/><path d="M8 11l4 4 4-4" stroke="currentColor"/><path d="M4 20h16" stroke="currentColor"/></svg>
-            Download
           </a>
         </div>
       </div>
@@ -195,59 +175,80 @@
   </main>
 
   <script>
-    /* ===== 0/1 Typewriter — runs on elements with .typer when visible ===== */
-    function binaryType(el){
-      const target=(el.dataset.text||el.textContent).replace(/\s+/g,' ').trim();
-      const steps=18; const chars=target.split(''); let frame=0;
-      (function tick(){
-        let done=true, out='';
-        for(let i=0;i<chars.length;i++){
-          const revealAt=i*2;
-          if(frame<revealAt+steps){ done=false; out += (frame<revealAt?' ':(Math.random()>.5?'0':'1')); }
-          else out += chars[i];
-        }
-        el.textContent=out; frame++;
-        if(!done) requestAnimationFrame(tick); else el.textContent=target;
-      })();
-    }
-    const io=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting && !e.target.__typed){ e.target.__typed=true; binaryType(e.target); } });
-    },{threshold:.2});
-    document.querySelectorAll('.typer').forEach(n=>io.observe(n));
-
-    /* ===== Subtle lightning effect ===== */
+    // ===== Ferrari drift: smoke reveal + skid + drive-off =====
     (function(){
-      const c=document.getElementById('fx'); if(!c) return; const d=c.getContext('2d');
-      let W,H; function resize(){W=c.width=innerWidth; H=c.height=innerHeight} resize(); addEventListener('resize',resize);
-      const bolts=[]; let lastSpawn=0;
-      function spawn(){
-        const x = Math.random()*W, y0=-20, y1=H*(0.55+Math.random()*0.35);
-        const segs = 12+Math.floor(Math.random()*10), pts=[[x,y0]]; let cx=x, cy=y0;
-        for(let i=0;i<segs;i++){ cx+=(Math.random()-.5)*60; cy+=(y1-y0)/segs + (Math.random()-.5)*10; pts.push([cx,cy]); }
-        bolts.push({pts,life:1,fade:.04+Math.random()*.03});
-      }
-      function draw(){
-        d.clearRect(0,0,W,H);
-        if(bolts.length){ d.globalCompositeOperation='screen'; }
-        for(let i=bolts.length-1;i>=0;i--){
-          const b=bolts[i], a=b.life;
-          d.strokeStyle=`rgba(255,255,255,${.55*a})`;
-          d.lineWidth=2*a; d.shadowBlur=18*a; d.shadowColor='rgba(255,255,255,.95)';
-          d.beginPath(); d.moveTo(b.pts[0][0],b.pts[0][1]); for(let j=1;j<b.pts.length;j++){ d.lineTo(b.pts[j][0],b.pts[j][1]); } d.stroke();
-          b.life-=b.fade; if(b.life<=0) bolts.splice(i,1);
-        }
-        requestAnimationFrame(draw);
-      }
-      draw();
-      function loop(ts){ if(ts-lastSpawn>1800+Math.random()*1600){ lastSpawn=ts; spawn(); } requestAnimationFrame(loop); }
-      requestAnimationFrame(loop);
-    })();
+      const svg   = document.querySelector('#hero svg');
+      if(!svg) return;
+      const smoke = svg.querySelector('#smoke');
+      const skids = svg.querySelector('#skids');
+      const car   = svg.querySelector('#car');
 
-    /* Optional: www -> apex redirect */
-    if(location.hostname.indexOf('www.')===0){
-      const apex = location.hostname.slice(4);
-      location.replace(`https://${apex}${location.pathname}${location.search}${location.hash}`);
-    }
+      const W = 1200, H = 160;
+      const baseY = 120;
+      let   x = -140;               // start left off-screen
+      const exitX = W + 160;        // exit right off-screen
+      let   v = 9.0;                // base speed (px per frame)
+      let   t = 0;
+
+      // prebuild a skid path element we will extend as the car slides
+      const skidPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+      skidPath.setAttribute('d', `M ${x} ${baseY+8}`);
+      skids.appendChild(skidPath);
+
+      function extendSkid(nx, ny){
+        const d = skidPath.getAttribute('d') + ` L ${nx} ${ny+8}`;
+        skidPath.setAttribute('d', d);
+      }
+
+      function puff(px, py, r0=6, r1=90, dur=0.9){
+        const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        c.setAttribute('cx', px);
+        c.setAttribute('cy', py);
+        c.setAttribute('r', r0);
+        c.setAttribute('fill', '#fff');
+        // radius animation
+        const a = document.createElementNS('http://www.w3.org/2000/svg','animate');
+        a.setAttribute('attributeName','r');
+        a.setAttribute('from', String(r0));
+        a.setAttribute('to',   String(r1));
+        a.setAttribute('dur',  dur+'s');
+        a.setAttribute('fill','freeze');
+        c.appendChild(a);
+        smoke.appendChild(c);
+        requestAnimationFrame(()=>a.beginElement());
+      }
+
+      function tick(){
+        t += 1;
+
+        // drift wiggle
+        const y = baseY + Math.sin(t/10)*10;
+
+        // move car
+        car.setAttribute('transform', `translate(${x},${y})`);
+
+        // smoke puffs trailing rear left
+        if(t % 2 === 0){
+          puff(x - 16, y - 1 + (Math.random()*6 - 3));
+          if(Math.random() < 0.35) puff(x - 26, y + (Math.random()*10 - 5), 5, 70, 0.8);
+        }
+
+        // extend skid line subtly
+        if(t % 1 === 0){
+          extendSkid(x, y);
+        }
+
+        // accel then ease
+        if(x < W*0.35) v += 0.06;
+        else if(x > W*0.7) v -= 0.05;
+
+        x += v;
+        if(x <= exitX){ requestAnimationFrame(tick); }
+      }
+
+      // start after slight delay
+      setTimeout(()=>requestAnimationFrame(tick), 280);
+    })();
   </script>
 </body>
 </html>
