@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#FF7529" />
   <style>
     :root{
-      --bg1:#FF7529;    /* orange */
-      --bg2:#291D4A;    /* deep violet */
+      --bg1:#FF7529;
+      --bg2:#291D4A;
       --text:#f8fafc;
       --muted:#cbd5e1;
       --card:rgba(255,255,255,.06);
@@ -24,11 +24,7 @@
       background:linear-gradient(120deg,var(--bg1),var(--bg2));
       min-height:100vh; overflow-x:hidden; position:relative;
     }
-
-    /* ---------- FX canvas (subtle lightning) ---------- */
     #fx{position:fixed;inset:0;pointer-events:none;z-index:0}
-
-    /* ---------- Header / Nav (no box; blends with bg) ---------- */
     header{position:sticky;top:0;z-index:50; background:transparent; border-bottom:none}
     nav{display:flex;align-items:center;justify-content:center;gap:48px;padding:16px}
     nav a{
@@ -37,8 +33,6 @@
       white-space:nowrap;
     }
     nav a:hover{ text-shadow:0 0 6px rgba(255,255,255,.35); color:#fff }
-
-    /* ---------- Layout / Cards ---------- */
     .section{padding:68px 20px;max-width:var(--max);margin:0 auto}
     .card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
     h1{font-size:clamp(36px,7vw,72px);margin-bottom:12px;text-align:center}
@@ -47,17 +41,13 @@
     .center{text-align:center}
     .icons{display:flex;gap:12px;justify-content:center;margin-top:12px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);box-shadow:var(--shadow);text-decoration:none;color:#fff;font-weight:600}
-
-    /* ---------- Accordions with spacing ---------- */
     details{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-    details + details{margin-top:16px}           /* spacing between boxes */
+    details + details{margin-top:16px}
     summary{cursor:pointer;list-style:none;font-weight:800}
     summary::marker{display:none}
     .muted{color:var(--muted)}
     ul{margin:8px 0 0 18px}
     li{margin:6px 0}
-
-    /* ---------- Contact card (aesthetic) ---------- */
     .contact-card{
       margin:0 auto;max-width:860px;padding:40px 28px;
       border-radius:22px;border:1px solid var(--card-border);
@@ -68,16 +58,11 @@
     .contact-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:14px}
     .contact-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:1px solid var(--card-border);background:rgba(255,255,255,.08);text-decoration:none;color:#fff;font-weight:700;box-shadow:var(--shadow)}
     .contact-btn svg{width:20px;height:20px}
-
-    /* ---------- Smooth scroll ---------- */
     html{scroll-behavior:smooth}
   </style>
 </head>
 <body>
-  <!-- Subtle lightning layer -->
   <canvas id="fx"></canvas>
-
-  <!-- Header with plain text links (no box) -->
   <header>
     <nav>
       <a class="typer" href="#home" data-text="Home">Home</a>
@@ -89,11 +74,9 @@
   </header>
 
   <main>
-    <!-- HOME -->
     <section id="home" class="section center">
       <div class="card" style="padding:40px">
         <h1 class="typer" data-text="Sarthak Madan">Sarthak Madan</h1>
-        <p class="typer" data-text="California State University, East Bay"><strong>California State University, East Bay</strong></p>
         <div class="icons">
           <a class="btn typer" data-text="LinkedIn" href="https://www.linkedin.com/in/madansarthak" target="_blank" rel="noreferrer">LinkedIn</a>
           <a class="btn typer" data-text="GitHub" href="https://github.com/SarthakMadan6" target="_blank" rel="noreferrer">GitHub</a>
@@ -102,7 +85,6 @@
       </div>
     </section>
 
-    <!-- ABOUT -->
     <section id="about" class="section">
       <div class="card">
         <h2 class="typer" data-text="About">About</h2>
@@ -111,7 +93,6 @@
       </div>
     </section>
 
-    <!-- EXPERIENCE (All items shown; each is a dropdown with spacing) -->
     <section id="experience" class="section">
       <h2 class="typer" data-text="Experience">Experience</h2>
 
@@ -149,7 +130,6 @@
       </details>
     </section>
 
-    <!-- PROJECTS -->
     <section id="projects" class="section">
       <h2 class="typer" data-text="Projects">Projects</h2>
 
@@ -168,7 +148,6 @@
       </details>
     </section>
 
-    <!-- CONTACT -->
     <section id="contact" class="section center">
       <div class="contact-card">
         <h2 class="typer" data-text="Contact">Contact</h2>
@@ -195,7 +174,6 @@
   </main>
 
   <script>
-    /* ===== 0/1 Typewriter — runs on elements with .typer when visible ===== */
     function binaryType(el){
       const target=(el.dataset.text||el.textContent).replace(/\s+/g,' ').trim();
       const steps=18; const chars=target.split(''); let frame=0;
@@ -215,7 +193,6 @@
     },{threshold:.2});
     document.querySelectorAll('.typer').forEach(n=>io.observe(n));
 
-    /* ===== Subtle lightning effect ===== */
     (function(){
       const c=document.getElementById('fx'); if(!c) return; const d=c.getContext('2d');
       let W,H; function resize(){W=c.width=innerWidth; H=c.height=innerHeight} resize(); addEventListener('resize',resize);
@@ -243,7 +220,6 @@
       requestAnimationFrame(loop);
     })();
 
-    /* Optional: www -> apex redirect */
     if(location.hostname.indexOf('www.')===0){
       const apex = location.hostname.slice(4);
       location.replace(`https://${apex}${location.pathname}${location.search}${location.hash}`);
